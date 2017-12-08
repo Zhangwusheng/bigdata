@@ -1,0 +1,2127 @@
+IP: 192.168.0.123
+
+username : root
+password : admin@123
+
+# useradd <username>
+
+# passwd <username>
+
+[root@localhost ~]# su - murthy
+[murthy@localhost ~]$ 
+
+Editor:
+-------
+ed	: interactive line editor
+ex	: improved version of ed editor
+sed	: non-interactive line editor
+vi	: visual editor - interactive screen editor
+vim	: improved version of 'vi' editor
+
+sed - stream editor - non-interactive line editor
+-------------------------------------------------
+With 'sed' we can perform following actions:
+
+printing	: p
+substituting	: s
+inserting	: i
+deleting	: d
+changing	: c
+appending	: a
+
+Printing : p
+------------
+[murthy@localhost ~]$ cat datafile
+3 kholi 28 69750
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 78955
+[murthy@localhost ~]$ sed 'p' datafile
+3 kholi 28 69750
+3 kholi 28 69750
+1 dhoni 38 87660
+1 dhoni 38 87660
+5 yuvraj 37 56750
+5 yuvraj 37 56750
+2 rohit 30 67890
+2 rohit 30 67890
+6 sachin 43 89560
+6 sachin 43 89560
+4 dravid 42 78955
+4 dravid 42 78955
+[murthy@localhost ~]$ sed '2p' datafile
+3 kholi 28 69750
+1 dhoni 38 87660
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 78955
+[murthy@localhost ~]$ sed -n 'p' datafile
+3 kholi 28 69750
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 78955
+[murthy@localhost ~]$ sed -n '2p' datafile
+1 dhoni 38 87660
+[murthy@localhost ~]$ sed -n '2,4p' datafile
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+[murthy@localhost ~]$ sed '/dhoni/p' datafile
+3 kholi 28 69750
+1 dhoni 38 87660
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 78955
+[murthy@localhost ~]$ sed -n '/dhoni/p' datafile
+1 dhoni 38 87660
+[murthy@localhost ~]$ sed -n '2,/sachin/p' datafile
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ sed -n '/dhoni/,/sachin/p' datafile
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ sed -n '/dhoni/,5p' datafile
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ sed -n '/sachin/p' datafile
+6 sachin 43 89560
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ sed -n '/SAChin/p' datafile
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ sed -n '/SAChin/I p' datafile
+6 sachin 43 89560
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ sed -n -e '2p' -e '4p' datafile
+1 dhoni 38 87660
+2 rohit 30 67890
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ sed -n -e '/dhoni/p' -e '/sachin/p' datafile
+1 dhoni 38 87660
+6 sachin 43 89560
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ sed -n '/dhoni/,+2p' datafile
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ sed -n '/^2/p' datafile
+2 rohit 30 67890
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ sed -n '/55$/p' datafile
+4 dravid 42 78955
+[murthy@localhost ~]$ sed -n '/^$/p' datafile
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ sed -n '2,5w outfile' datafile
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ cat outfile
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+
+Substituting - s:
+-----------------
+[murthy@localhost ~]$ cat datafile
+3 kholi 28 69750
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 78955
+[murthy@localhost ~]$ sed 's/5/X/' datafile
+3 kholi 28 697X0
+1 dhoni 38 87660
+X yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89X60
+4 dravid 42 789X5
+[murthy@localhost ~]$ sed 's/5/X/g' datafile
+3 kholi 28 697X0
+1 dhoni 38 87660
+X yuvraj 37 X67X0
+2 rohit 30 67890
+6 sachin 43 89X60
+4 dravid 42 789XX
+[murthy@localhost ~]$ sed -i 's/5/X/g' datafile
+[murthy@localhost ~]$ cat datafile
+3 kholi 28 697X0
+1 dhoni 38 87660
+X yuvraj 37 X67X0
+2 rohit 30 67890
+6 sachin 43 89X60
+4 dravid 42 789XX
+[murthy@localhost ~]$ sed -i 's/X/5/g' datafile
+[murthy@localhost ~]$ cat datafile
+3 kholi 28 69750
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 78955
+[murthy@localhost ~]$ sed 's/5/X/2g' datafile
+3 kholi 28 69750
+1 dhoni 38 87660
+5 yuvraj 37 X67X0
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 7895X
+[murthy@localhost ~]$ sed 's/5/X/2' datafile
+3 kholi 28 69750
+1 dhoni 38 87660
+5 yuvraj 37 X6750
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 7895X
+[murthy@localhost ~]$ sed '3s/5/X/g' datafile
+3 kholi 28 69750
+1 dhoni 38 87660
+X yuvraj 37 X67X0
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 78955
+[murthy@localhost ~]$ sed '3,5s/5/X/g' datafile
+3 kholi 28 69750
+1 dhoni 38 87660
+X yuvraj 37 X67X0
+2 rohit 30 67890
+6 sachin 43 89X60
+4 dravid 42 78955
+[murthy@localhost ~]$ sed '/yuvraj/s/5/X/g' datafile
+3 kholi 28 69750
+1 dhoni 38 87660
+X yuvraj 37 X67X0
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 78955
+[murthy@localhost ~]$ sed '/dhoni/,/yuvraj/s/5/X/g' datafile
+3 kholi 28 69750
+1 dhoni 38 87660
+X yuvraj 37 X67X0
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 78955
+[murthy@localhost ~]$ sed '/dhoni/,/yuvraj/s/6/X/g' datafile
+3 kholi 28 69750
+1 dhoni 38 87XX0
+5 yuvraj 37 5X750
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 78955
+[murthy@localhost ~]$ sed '/sachin/s/sachin/sachin tendulkar/g' datafile
+3 kholi 28 69750
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin tendulkar 43 89560
+4 dravid 42 78955
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ sed '/sachin/s/sachin/& tendulkar/g' datafile
+3 kholi 28 69750
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin tendulkar 43 89560
+4 dravid 42 78955
+[murthy@localhost ~]$ sed 's/sachin/& tendulkar/g' datafile
+3 kholi 28 69750
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin tendulkar 43 89560
+4 dravid 42 78955
+[murthy@localhost ~]$ cat datafile
+3 kholi 28 69750
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 78955
+[murthy@localhost ~]$ sed 's/[a-z]/& /g' datafile
+3 k h o l i  28 69750
+1 d h o n i  38 87660
+5 y u v r a j  37 56750
+2 r o h i t  30 67890
+6 s a c h i n  43 89560
+4 d r a v i d  42 78955
+[murthy@localhost ~]$ sed 's/[[:lower:]]/& /g' datafile
+3 k h o l i  28 69750
+1 d h o n i  38 87660
+5 y u v r a j  37 56750
+2 r o h i t  30 67890
+6 s a c h i n  43 89560
+4 d r a v i d  42 78955
+[murthy@localhost ~]$ echo "Welcome To Unix" | sed 's/[[:upper:]]/[&]/g'
+[W]elcome [T]o [U]nix
+
+Inserting - i
+-------------
+[murthy@localhost ~]$ sed 'i 7 Sehwag 39 45680' datafile
+7 Sehwag 39 45680
+3 kholi 28 69750
+7 Sehwag 39 45680
+1 dhoni 38 87660
+7 Sehwag 39 45680
+5 yuvraj 37 56750
+7 Sehwag 39 45680
+2 rohit 30 67890
+7 Sehwag 39 45680
+6 sachin 43 89560
+7 Sehwag 39 45680
+4 dravid 42 78955
+[murthy@localhost ~]$ sed '2i 7 Sehwag 39 45680' datafile
+3 kholi 28 69750
+7 Sehwag 39 45680
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 78955
+[murthy@localhost ~]$ sed '$i 7 Sehwag 39 45680' datafile
+3 kholi 28 69750
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+7 Sehwag 39 45680
+4 dravid 42 78955
+
+[murthy@localhost ~]$ sed -i '2i 7 sehwag 39 45670' datafile
+[murthy@localhost ~]$ cat datafile
+3 kholi 28 69750
+7 sehwag 39 45670
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 78955
+
+Appending - a:
+--------------
+[murthy@localhost ~]$ sed -i '$a 8 ganguly 44 85670' datafile
+[murthy@localhost ~]$ cat datafile
+3 kholi 28 69750
+7 sehwag 39 45670
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 78955
+8 ganguly 44 85670
+
+Changing - c:
+-------------
+[murthy@localhost ~]$ sed '/sehwag/c 7 virendra 39 78930' datafile
+3 kholi 28 69750
+7 virendra 39 78930
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 78955
+8 ganguly 44 85670
+
+Deleting - d:
+-------------
+[murthy@localhost ~]$ sed 'd' datafile
+[murthy@localhost ~]$ sed '2d' datafile
+3 kholi 28 69750
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 78955
+8 ganguly 44 85670
+[murthy@localhost ~]$ sed '/ganguly/d' datafile
+3 kholi 28 69750
+7 sehwag 39 45670
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 78955
+***********************************************************************************************
+awk  command:
+-------------
+a - aho
+w - weirner
+k - kernighan
+
+- awk is mainly used to process data in files which contain records
+
+[murthy@localhost ~]$ cat datafile
+3 kholi 28 69750
+7 sehwag 39 45670
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 78955
+8 ganguly 44 85670
+[murthy@localhost ~]$ awk '{print $0}' datafile
+3 kholi 28 69750
+7 sehwag 39 45670
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 78955
+8 ganguly 44 85670
+[murthy@localhost ~]$ awk '{print $1,$2}' datafile
+3 kholi
+7 sehwag
+1 dhoni
+5 yuvraj
+2 rohit
+6 sachin
+4 dravid
+8 ganguly
+[murthy@localhost ~]$ awk '{print $2,$4}' datafile
+kholi 69750
+sehwag 45670
+dhoni 87660
+yuvraj 56750
+rohit 67890
+sachin 89560
+dravid 78955
+ganguly 85670
+[murthy@localhost ~]$ awk '{print $2,"earns salary of",$4}' datafile
+kholi earns salary of 69750
+sehwag earns salary of 45670
+dhoni earns salary of 87660
+yuvraj earns salary of 56750
+rohit earns salary of 67890
+sachin earns salary of 89560
+dravid earns salary of 78955
+ganguly earns salary of 85670
+[murthy@localhost ~]$ awk '{printf("%s\t%7.2f\n",$2,$4)}' datafile
+kholi	69750.00
+sehwag	45670.00
+dhoni	87660.00
+yuvraj	56750.00
+rohit	67890.00
+sachin	89560.00
+dravid	78955.00
+ganguly	85670.00
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ awk '{printf("%s\t%7.2f\n",toupper($2),$4)}' datafile
+KHOLI	69750.00
+SEHWAG	45670.00
+DHONI	87660.00
+YUVRAJ	56750.00
+ROHIT	67890.00
+SACHIN	89560.00
+DRAVID	78955.00
+GANGULY	85670.00
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ awk '/dhoni/{print $2,$4}' datafile
+dhoni 87660
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ awk '/dhoni/,/sachin/{print $2,$4}' datafile
+dhoni 87660
+yuvraj 56750
+rohit 67890
+sachin 89560
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ awk '/dhoni/,/sachin/' datafile
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+[murthy@localhost ~]$ awk '$2=="dhoni"{print $0}' datafile
+1 dhoni 38 87660
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ awk '$2=="dhoni" || $2=="sachin" {print $0}' datafile
+1 dhoni 38 87660
+6 sachin 43 89560
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ cat datafile
+3 kholi 28 69750
+7 sehwag 39 45670
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 78955
+8 ganguly 44 85670
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ awk '$3 > 40 && $4 > 80000' datafile
+6 sachin 43 89560
+8 ganguly 44 85670
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ awk datafile
+welcome
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ cat datafile
+3 kholi 28 69750
+7 sehwag 39 45670
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 78955
+8 ganguly 44 85670
+[murthy@localhost ~]$ awk '{print NR,$2,$3,$4}' datafile
+1 kholi 28 69750
+2 sehwag 39 45670
+3 dhoni 38 87660
+4 yuvraj 37 56750
+5 rohit 30 67890
+6 sachin 43 89560
+7 dravid 42 78955
+8 ganguly 44 85670
+[murthy@localhost ~]$ awk '{print NR,$0}' datafile
+1 3 kholi 28 69750
+2 7 sehwag 39 45670
+3 1 dhoni 38 87660
+4 5 yuvraj 37 56750
+5 2 rohit 30 67890
+6 6 sachin 43 89560
+7 4 dravid 42 78955
+8 8 ganguly 44 85670
+[murthy@localhost ~]$ awk 'NR==2' datafile
+7 sehwag 39 45670
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ awk 'NR==2 || NR==5' datafile
+7 sehwag 39 45670
+2 rohit 30 67890
+[murthy@localhost ~]$ awk 'NR>=2 && NR<=5' datafile
+7 sehwag 39 45670
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ awk '{print $NR}' datafile
+3
+sehwag
+38
+56750
+
+
+
+
+[murthy@localhost ~]$ cat datafile
+3 kholi 28 69750
+7 sehwag 39 45670
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+6 sachin 43 89560
+4 dravid 42 78955
+8 ganguly 44 85670
+[murthy@localhost ~]$ awk '{print $0,NF}' datafile
+3 kholi 28 69750 4
+7 sehwag 39 45670 4
+1 dhoni 38 87660 4
+5 yuvraj 37 56750 4
+2 rohit 30 67890 4
+6 sachin 43 89560 4
+4 dravid 42 78955 4
+8 ganguly 44 85670 4
+[murthy@localhost ~]$ awk '{print $NF}' datafile
+69750
+45670
+87660
+56750
+67890
+89560
+78955
+85670
+[murthy@localhost ~]$ cp datafile players
+[murthy@localhost ~]$ sed -i 's/ /-/g' players
+[murthy@localhost ~]$ cat players
+3-kholi-28-69750
+7-sehwag-39-45670
+1-dhoni-38-87660
+5-yuvraj-37-56750
+2-rohit-30-67890
+6-sachin-43-89560
+4-dravid-42-78955
+8-ganguly-44-85670
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ awk -F"-" '{print $2,$4}' players
+kholi 69750
+sehwag 45670
+dhoni 87660
+yuvraj 56750
+rohit 67890
+sachin 89560
+dravid 78955
+ganguly 85670
+[murthy@localhost ~]$ awk -F"-" '{OFS="#";print $2,$4}' players
+kholi#69750
+sehwag#45670
+dhoni#87660
+yuvraj#56750
+rohit#67890
+sachin#89560
+dravid#78955
+ganguly#85670
+[murthy@localhost ~]$ awk '/sehwag/,/rohit/{print $0 > "file1"}
+> /sachin/,/ganguly/{print $0 > "file2"}' datafile
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ cat file1
+7 sehwag 39 45670
+1 dhoni 38 87660
+5 yuvraj 37 56750
+2 rohit 30 67890
+[murthy@localhost ~]$ cat file2
+6 sachin 43 89560
+4 dravid 42 78955
+8 ganguly 44 85670
+
+BEGIN and END constructs in awk:
+--------------------------------
+BEGIN	: is pre-processor statement. Actions to be performed before action is performed on first record
+END	: is post-processor statement. Actions to be performed after processing all the records
+
+[murthy@localhost ~]$ awk 'BEGIN {printf("\n\tIndian Cricket Team\n");sum=0}
+> {
+>    printf("%4d%s\t%5d%7.2f\n",$1,$2,$3,$4);
+>    sum=sum+$4
+> }
+> END {printf("\n\tTotal Salary:%10.2f\n",sum)}' datafile
+
+	Indian Cricket Team
+   3kholi	   2869750.00
+   7sehwag	   3945670.00
+   1dhoni	   3887660.00
+   5yuvraj	   3756750.00
+   2rohit	   3067890.00
+   6sachin	   4389560.00
+   4dravid	   4278955.00
+   8ganguly	   4485670.00
+
+	Total Salary: 581905.00
+[murthy@localhost ~]$ awk 'BEGIN {printf("\n\tIndian Cricket Team\n");sum=0}
+{
+   printf("%d\t%s\t%d\t%7.2f\n",$1,$2,$3,$4);
+   sum=sum+$4
+}
+END {printf("\n\tTotal Salary:%10.2f\n",sum)}' datafile
+
+	Indian Cricket Team
+3	kholi	28	69750.00
+7	sehwag	39	45670.00
+1	dhoni	38	87660.00
+5	yuvraj	37	56750.00
+2	rohit	30	67890.00
+6	sachin	43	89560.00
+4	dravid	42	78955.00
+8	ganguly	44	85670.00
+
+	Total Salary: 581905.00
+[murthy@localhost ~]$ vi cmdfile
+[murthy@localhost ~]$ cat cmdfile
+BEGIN {printf("\n\tIndian Cricket Team\n");sum=0}
+{
+   printf("%d\t%s\t%d\t%7.2f\n",$1,$2,$3,$4);
+   sum=sum+$4
+}
+END {printf("\n\tTotal Salary:%10.2f\n",sum)}
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ awk -f cmdfile datafile
+
+	Indian Cricket Team
+3	kholi	28	69750.00
+7	sehwag	39	45670.00
+1	dhoni	38	87660.00
+5	yuvraj	37	56750.00
+2	rohit	30	67890.00
+6	sachin	43	89560.00
+4	dravid	42	78955.00
+8	ganguly	44	85670.00
+
+	Total Salary: 581905.00
+[murthy@localhost ~]$ awk -F"-" -f cmdfile players
+
+	Indian Cricket Team
+3	kholi	28	69750.00
+7	sehwag	39	45670.00
+1	dhoni	38	87660.00
+5	yuvraj	37	56750.00
+2	rohit	30	67890.00
+6	sachin	43	89560.00
+4	dravid	42	78955.00
+8	ganguly	44	85670.00
+
+	Total Salary: 581905.00
+[murthy@localhost ~]$ vi cmdfile
+[murthy@localhost ~]$ cat cmdfile
+BEGIN {printf("\n\tIndian Cricket Team\n\n");sum=0}
+{
+   if($4 >= 70000)
+   { 
+       printf("%d\t%s\t%d\t%7.2f\n",$1,$2,$3,$4);
+       sum=sum+$4
+   }
+}
+END {printf("\n\tTotal Salary:%10.2f\n",sum)}
+[murthy@localhost ~]$ awk -f cmdfile datafile
+
+	Indian Cricket Team
+
+1	dhoni	38	87660.00
+6	sachin	43	89560.00
+4	dravid	42	78955.00
+8	ganguly	44	85670.00
+
+	Total Salary: 341845.00
+
+[murthy@localhost ~]$ awk '{sum+=$4} END {printf("Total Salary:%10.2f\n",sum)}' datafile
+Total Salary: 581905.00
+
+[murthy@localhost ~]$ ls -l
+total 24
+-rw-rw-r--. 1 murthy murthy 200 Dec  7 12:46 cmdfile
+-rw-rw-r--. 1 murthy murthy 142 Dec  7 11:30 datafile
+-rw-rw-r--. 1 murthy murthy  70 Dec  7 12:17 file1
+-rw-rw-r--. 1 murthy murthy  55 Dec  7 12:17 file2
+-rw-rw-r--. 1 murthy murthy  70 Dec  7 10:42 outfile
+-rw-rw-r--. 1 murthy murthy 142 Dec  7 12:10 players
+[murthy@localhost ~]$ # Write a commandline to display total size occupied by all files in current
+[murthy@localhost ~]$ # directory
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ ls -l | awk '{sum+=$5} END {print "Total Size:",sum}'
+Total Size: 679
+[murthy@localhost ~]$ 
+[murthy@localhost ~]$ ls -lR | awk '{sum+=$5} END {print "Total Size:",sum}'
+Total Size: 679
+**********************************************************************************************************
+SHELL Scripting:
+----------------
+What is a shell?
+----------------
+ -Shell is a command interpreter.
+ -Apart from interpretation, it also provides with programming language constructs(if,case,loops,..) using
+  which you can write decision making code.
+
+What is a shell script?
+-----------------------
+ -It is a simple text file which contains sequence of one or more valid unix commands with optional decision
+  making code.
+ -It acts like a wrapper command
+
+What is the use of shell script?
+--------------------------------
+ -To automate routine tasks
+   * Installing application software
+   * Deploying web application
+   * Performing backup of database files
+   * Managing log files
+   * Managing users
+   * etc.,
+
+Type of shells:
+---------------
+sh	: bourne shell - developed by steve bourne at AT&T BELL labs - available in all unix/linux flavors
+ksh	: korn shell - developed by david korn at AT&T BELL labs - default shell in IBM's AIX os
+        : most popular shell
+bash	: bourne again shell - linus torvalds - default shell in linux platforms
+csh	: c shell
+tcsh	: tennel c shell
+
+Syntax of control flow structures of sh,ksh & bash are quite similar
+csh,tcsh syntax is similar to 'C' language
+*********************************************
+Shell Variables:
+----------------
+[murthy@localhost ~]$ echo HOME
+HOME
+[murthy@localhost ~]$ echo $HOME
+/home/murthy
+[murthy@localhost ~]$ echo $SHELL
+/bin/bash
+[murthy@localhost ~]$ echo $USER
+murthy
+[murthy@localhost ~]$ echo $LOGNAME
+murthy
+[murthy@localhost ~]$ echo $TERM
+xterm
+[murthy@localhost ~]$ echo $PS1
+[\u@\h \W]\$
+[murthy@localhost ~]$ echo $PS2
+>
+[murthy@localhost ~]$ echo $PATH
+/usr/lib/qt-3.3/bin:/usr/kerberos/sbin:/usr/kerberos/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/murthy/bin
+
+[murthy@localhost ~]$ echo $PS1
+[\u@\h \W]\$
+[murthy@localhost ~]$ PS1="$ "
+
+$ env
+HOSTNAME=localhost.localdomain
+SHELL=/bin/bash
+TERM=xterm
+HISTSIZE=1000
+...
+...
+
+Startup Scripts:
+----------------
+  .bash_profile ->  .bashrc  -> /etc/bashrc  -> /etc/profile ....
+
+Local & Global Shell variables:
+-------------------------------
+$ ps
+  PID TTY          TIME CMD
+ 5523 pts/0    00:00:00 bash
+ 9748 pts/0    00:00:00 ps
+$ name=krishna
+$ echo $name
+krishna
+$ sh
+sh-4.1$ ps
+  PID TTY          TIME CMD
+ 5523 pts/0    00:00:00 bash
+ 9765 pts/0    00:00:00 sh
+ 9769 pts/0    00:00:00 ps
+sh-4.1$ echo $name
+
+sh-4.1$ exit
+exit
+$ export name
+$ echo $name
+krishna
+$ sh
+sh-4.1$ echo $name
+krishna
+
+$ vi first.sh
+$ cat first.sh
+echo "Welcome to unix shell scripting"
+pwd
+date
+cal
+ps
+$ 
+$ sh first.sh
+Welcome to unix shell scripting
+/home/murthy
+Thu Dec  7 14:13:32 IST 2017
+    December 2017   
+Su Mo Tu We Th Fr Sa
+                1  2
+ 3  4  5  6  7  8  9
+10 11 12 13 14 15 16
+17 18 19 20 21 22 23
+24 25 26 27 28 29 30
+31
+  PID TTY          TIME CMD
+ 5523 pts/0    00:00:00 bash
+ 9983 pts/0    00:00:00 sh
+ 9986 pts/0    00:00:00 ps
+$ chmod u+x first.sh
+$ ./first.sh
+Welcome to unix shell scripting
+/home/murthy
+Thu Dec  7 14:15:09 IST 2017
+    December 2017   
+Su Mo Tu We Th Fr Sa
+                1  2
+ 3  4  5  6  7  8  9
+10 11 12 13 14 15 16
+17 18 19 20 21 22 23
+24 25 26 27 28 29 30
+31
+  PID TTY          TIME CMD
+ 5523 pts/0    00:00:00 bash
+10161 pts/0    00:00:00 bash
+10164 pts/0    00:00:00 ps
+*********************************************************************
+Interactive Script:
+-------------------
+$ cat welcome.sh 
+echo "Enter your firstname:"
+read firstname
+echo -n "Enter your lastname:"
+read lname
+echo "$firstname $lname is welcome to unix shell scripting"
+$ 
+$ chmod u+x welcome.sh 
+$ 
+$ ./welcome.sh 
+Enter your firstname:
+Krishna
+Enter your lastname:murthy
+Krishna murthy is welcome to unix shell scripting
+
+$ cat welcome.sh 
+echo "Enter your firstname:"
+read firstname
+echo -n "Enter your lastname:"
+read lname
+read -p "Enter your mailid:" mailid
+read -p "Enter your password:" -s pssd
+echo -e "\nFirstname:$firstname\nLastname:$lname\nMailid:$mailid\nPassword:$pssd"
+
+$ ./welcome.sh 
+Enter your firstname:
+Krishna
+Enter your lastname:murthy
+Enter your mailid:krishna@gmail.com
+Enter your password:
+Firstname:Krishna
+Lastname:murthy
+Mailid:krishna@gmail.com
+Password:welcome
+**************************************************************************************
+Example on quotes:
+------------------
+$ vi quote.sh
+$ cat quote.sh 
+message="Welcome to unix
+shell scripting"
+
+echo Message:$message
+echo Message:"$message"
+echo Message:'$message'
+echo Message:\$message
+
+echo Current date and time is : date
+
+echo Current date and time is : `date`
+
+echo Current working directory : $(pwd)
+$ 
+$ chmod u+x quote.sh 
+$ ./quote.sh 
+Message:Welcome to unix shell scripting
+Message:Welcome to unix
+shell scripting
+Message:$message
+Message:$message
+Current date and time is : date
+Current date and time is : Thu Dec 7 14:38:07 IST 2017
+Current working directory : /home/murthy
+******************************************************
+$ today=date
+$ echo $today
+date
+$ today=`date`
+$ echo $today
+Thu Dec 7 14:45:36 IST 2017
+$ today=$(date)
+$ echo $today
+Thu Dec 7 14:45:51 IST 2017
+***********************************************************
+$ pwd
+/home/murthy
+$ ls
+cmdfile  datafile  file1  file2  first.sh  outfile  players  quote.sh  welcome.sh
+$ 
+$ mkdir BACKUP
+$ # Write a script for performing backup of file which is passed as input during runtime. File must
+$ # backedup with extension ".bkp" into a new directory under BACKUP. New directory under BACKUP 
+$ # must have part date in its name.[Eg:BKP_7_DEC_2017_14_50]
+$ 
+$ vi backup1.sh
+$ cat backup1.sh 
+read -p "Enter filename for backup:" flname
+
+DATEPART=`date '+%d_%b_%Y_%H_%M'`
+
+DIRNAME=BKP_$DATEPART
+
+mkdir ~/BACKUP/$DIRNAME
+
+echo "File copy in progress...."
+
+cp $flname ~/BACKUP/$DIRNAME/$flname.bkp
+
+echo "$flname file backup completed."
+$ chmod u+x backup1.sh 
+$ ./backup1.sh 
+Enter filename for backup:datafile
+File copy in progress....
+datafile file backup completed.
+$ tree BACKUP
+BACKUP
+└── BKP_07_Dec_2017_15_19
+    └── datafile.bkp
+
+1 directory, 1 file
+*****************************************************************************
+Bugs:
+-----
+-What if user does not provide any input
+-What if user provides filename which is not present
+-What if user provides directory name as input
+*****************************************************************************
+Commandline arguments or positional parameters:
+-----------------------------------------------
+$0	: returns name of the program/script
+$1	: returns first argument in command line
+$2	: returns second argument in command line
+..
+..
+$n	: returns 'nth' argument in command line
+$#	: returns count of arguments (excluding script name)
+$*	: returns all arguments (excluding script name)
+$@	: same as $* but internally within quotes
+$$	: returns PID of current process
+$?	: returns exit status of last command
+
+Example:
+--------
+$ vi cmdargs.sh
+$ cat cmdargs.sh 
+echo "Name of the script:$0"
+echo "Name of the script:`basename $0`"
+echo "Number of arguments:$#"
+echo "List of arguments:$*"
+echo "First 2 arguments:$1 and $2"
+$ 
+$ chmod u+x cmdargs.sh 
+$ ./cmdargs.sh welcome to unix shell scripting
+Name of the script:./cmdargs.sh
+Name of the script:cmdargs.sh
+Number of arguments:5
+List of arguments:welcome to unix shell scripting
+First 2 arguments:welcome and to
+$ 
+$ /home/murthy/cmdargs.sh welcome to unix shell scripting
+Name of the script:/home/murthy/cmdargs.sh
+Name of the script:cmdargs.sh
+Number of arguments:5
+List of arguments:welcome to unix shell scripting
+First 2 arguments:welcome and to
+
+Accessing arguments more than 9:
+--------------------------------
+$ cat cmdargs.sh 
+echo "Name of the script:$0"
+echo "Name of the script:`basename $0`"
+echo "Number of arguments:$#"
+echo "List of arguments:$*"
+echo "First 2 arguments:$1 and $2"
+echo "10th and 11th arguments:$10 and $11"
+$ ./cmdargs.sh a b c d e f g h i j k l
+Name of the script:./cmdargs.sh
+Name of the script:cmdargs.sh
+Number of arguments:12
+List of arguments:a b c d e f g h i j k l
+First 2 arguments:a and b
+10th and 11th arguments:a0 and a1
+
+Importance of {}:
+-----------------
+$ vi cmdargs.sh
+$ cat cmdargs.sh 
+echo "Name of the script:$0"
+echo "Name of the script:`basename $0`"
+echo "Number of arguments:${#}"
+echo "List of arguments:$*"
+echo "First 2 arguments:${1} and ${2}"
+echo "10th and 11th arguments:${10} and ${11}"
+$ ./cmdargs.sh a b c d e f g h i j k l
+Name of the script:./cmdargs.sh
+Name of the script:cmdargs.sh
+Number of arguments:12
+List of arguments:a b c d e f g h i j k l
+First 2 arguments:a and b
+10th and 11th arguments:j and k
+*************************************
+$ rama=krishna
+$ echo $rama
+krishna
+$ echo $ramamurthy
+
+$ echo ${rama}murthy
+krishnamurthy
+**********************************
+#Implement backup script using command line arguments
+
+$ cat backup2.sh
+flname=$1
+DATEPART=`date '+%d_%b_%Y_%H_%M'`
+DIRNAME=BKP_$DATEPART
+mkdir ~/BACKUP/$DIRNAME
+echo "File copy in progress...."
+cp $flname ~/BACKUP/$DIRNAME/$flname.bkp
+echo "$flname file backup completed."
+$ 
+$ ./backup2.sh file1
+File copy in progress....
+file1 file backup completed.
+$ tree BACKUP/
+BACKUP/
+├── BKP_07_Dec_2017_15_19
+│   └── datafile.bkp
+└── BKP_07_Dec_2017_16_24
+    └── file1.bkp
+
+2 directories, 2 files
+****************************************************************
+Importance of PATH variable:
+----------------------------
+$ ./first.sh
+Welcome to unix shell scripting
+/home/murthy
+Thu Dec  7 16:28:59 IST 2017
+....
+
+$ first.sh
+-bash: first.sh: command not found
+
+$ echo $PATH
+/usr/lib/qt-3.3/bin:/usr/kerberos/sbin:/usr/kerberos/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/murthy/bin
+ 
+$ PATH=$PATH:.
+$ echo $PATH
+/usr/lib/qt-3.3/bin:/usr/kerberos/sbin:/usr/kerberos/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/murthy/bin:.
+$ first.sh
+Welcome to unix shell scripting
+/home/murthy
+Thu Dec  7 16:30:41 IST 2017
+.....
+****************************************DAY-2************************************************
+$? - returns exit status of last command
+
+- If $? returns 0 (zero) it means true/success else if it returns non-zero (1-255) it means false/failure.
+
+$ grep "sachin" datafile > outfile 2> errorfile 
+$ echo $?
+0
+$ grep "sachin" nofile > outfile 2> errorfile ; echo $?
+2
+$ grep "krishna" datafile > outfile 2> errorfile ; echo $?
+1
+
+Within grep program:
+--------------------
+if <pattern found>
+  exit(0);
+else if <file not found>
+  exit(2);
+else if <pattern not found>
+  exit(1);
+
+&& and || operators:
+--------------------
+$ grep "sachin" datafile && echo "Pattern found in file"
+6 sachin 43 89560
+Pattern found in file
+$ 
+$ grep "krishna" datafile && echo "Pattern found in file"
+$ 
+$ grep "krishna" datafile || echo "Pattern not found in file"
+Pattern not found in file
+$ 
+$ grep "sachin" datafile || echo "Pattern not found in file"
+6 sachin 43 89560
+***************************************************************
+Evaluating conditional statements:
+----------------------------------
+   test <condition>
+        or
+   [ <condition> ]
+        or
+  [[ <condition> ]] --mainly used for string
+
+Integer comparison operators:
+-----------------------------
+ -eq	: equal to
+ -ne	: not equal to
+ -gt	: greater than
+ -ge	: greater than or equal to
+ -lt	: less than
+ -le	: less than or equal to
+
+Logical Operators:
+------------------
+ -a	: AND
+ -o	: OR
+  !	: NOT
+
+Examples:
+---------
+$ x=10
+$ y=5
+$ z=10
+$ 
+$ test $x -eq $z
+$ echo $?
+0
+$ test $x -eq $y ; echo $?
+1
+$ [ $x -gt $y ] ; echo $?
+0
+$ [ $x -gt $y -a $x -eq $z ] ; echo $?
+0
+$ [ $x -lt $y -a $x -eq $z ] ; echo $?
+1
+$ [ $x -lt $y -o $x -eq $z ] ; echo $?
+0
+$ [ $x -gt $y ] ; echo $?
+0
+$ [ ! $x -gt $y ] ; echo $?
+1
+
+String comparison operators:
+----------------------------
+"str1" = "str2"		: returns true if both strings are identical
+"str1" != "str2"	: returns true if both strings differ
+-z "str"		: returns true if "str" is NULL
+-n "str"		: returns true if "str" is NOT NULL
+"str1" > "str2"		: returns true if "str1" is greater than "str2"
+"str1" < "str2"		: returns true if "str1" is less than "str2"
+
+Examples:
+---------
+$ str1=unix
+$ str2=linux
+$ str3=unix
+$ str4=
+$ [ "$str1" = "$str2" ] ; echo $?
+1
+$ [ "$str1" = "$str3" ] ; echo $?
+0
+$ [ "$str1" = "$str3" -a "$str2" != "$str3" ] ; echo $?
+0
+$ [ "$str1" = "$str2" -a "$str2" != "$str3" ] ; echo $?
+1
+$ [ "$str1" = "$str2" -o "$str2" != "$str3" ] ; echo $?
+0
+$ [ -z "$str1" ] ; echo $?
+1
+$ [ -z "$str4" ] ; echo $?
+0
+$ [ ! -z "$str4" ] ; echo $?
+1
+$ [ -n "$str4" ] ; echo $?
+1
+$ [ "$str1" > "$str2" ] ; echo $?	--bug
+0
+$ [ "$str1" < "$str2" ] ; echo $?	--bug
+0
+$ [[ "$str1" > "$str2" ]] ; echo $?
+0
+$ [[ "$str1" < "$str2" ]] ; echo $?
+1
+**********************************************
+File testing commands:
+----------------------
+-e <file>		: returns true if <file> is existing
+-f <file>		: returns true if <file> is regular file
+-d <file>		: returns true if <file> is directory file
+-L <file>		: returns true if <file> is symbolic link file
+-r <file>		: returns true if <file> has read access
+-w <file>		: returns true if <file> has write access
+-x <file>		: returns true if <file> has execute access
+-s <file>		: returns true if <file> is non-empty
+<file1> -ot <file2>	: returns true if <file1> is older than <file2>
+<file1> -nt <file2>	: returns true if <file1> is newer than <file2>
+
+Examples:
+---------
+$ [ -e file1 ] ; echo $?
+0
+$ [ -e nofile ] ; echo $?
+1
+$ [ -f file1 ] ; echo $?
+0
+$ [ -f BACKUP ] ; echo $?
+1
+$ [ -d BACKUP ] ; echo $?
+0
+$ [ -e file1 -a -f file1 ] ; echo $?
+0
+$ ls
+BACKUP      backup2.sh  cmdfile   errorfile  file2     linux    players   welcome.sh
+backup1.sh  cmdargs.sh  datafile  file1      first.sh  outfile  quote.sh
+$ 
+$ [ -e outfile -a ! -x outfile ] && chmod u+x outfile
+$ ls -l outfile
+-rwxrw-r--. 1 murthy murthy 0 Dec  8 09:44 outfile
+$ 
+$ [ -e linux -a ! -s linux ] && rm -i linux
+rm: remove regular empty file `linux'? y
+****************************************************************************
+Performing integer arithmetic:
+------------------------------
+  expr   or   $((<expression>))
+
+Examples:
+---------
+$ x=10
+$ y=4
+$ expr $x + $y
+14
+$ expr $x - $y
+6
+$ expr $x / $y
+2
+$ expr $x % $y
+2
+$ expr $x \* $y
+40
+$ z=`expr $x \* $y`
+$ echo $z
+40
+$ echo $((x+$y*z))
+170
+$ z=$((x+$y*z))
+$ echo $z
+170
+*************************************************************
+Control Flow structures:
+------------------------
+if - statement:
+---------------
+if <condition>
+then
+  <statements>
+elif <condition>
+then
+  <statements>
+...
+...
+else
+  <statements>
+fi
+
+Example:
+--------
+Using exit status in script:
+----------------------------
+$ cat findpattern.sh 
+#!/bin/bash
+
+# Interactive script for searching pattern in a given file
+# Author  : krishna
+# Created : 12-feb-2016
+# Modified: 23-Jun-2017
+
+read -p "Enter pattern :"  pattern
+read -p "Enter filename:"  flname
+
+if [ -z "$pattern" -o -z "$flname" ]
+then
+  echo "Pattern/Filename not provided."
+  exit 4
+fi
+
+grep "$pattern" $flname > /dev/null 2>> errorlog
+
+EXIT_CODE=$?
+
+if [ $EXIT_CODE -eq 0 ]
+then
+  echo "$pattern string found in $flname file."
+  exit 0
+elif [ $EXIT_CODE -eq 1 ]
+then
+  echo "$pattern string not found in $flname file."
+  exit 1
+elif [ $EXIT_CODE -eq 2 ]
+then
+  echo "Not able to open $flname file"
+  exit 2
+fi
+$ chmod u+x findpattern.sh 
+$ ./findpattern.sh 
+Enter pattern :sachin
+Enter filename:
+Pattern/Filename not provided.
+$ ./findpattern.sh 
+Enter pattern :
+Enter filename:
+Pattern/Filename not provided.
+$ ./findpattern.sh 
+Enter pattern :sachin
+Enter filename:datafile
+sachin string found in datafile file.
+$ echo $?
+0
+$ ./findpattern.sh 
+Enter pattern :sachin
+Enter filename:nofile
+Not able to open nofile file
+$ echo $?
+2
+$ ./findpattern.sh 
+Enter pattern :krishna
+Enter filename:datafile
+krishna string not found in datafile file.
+$ echo $?
+1
+**************************************************
+Without exit code in script:
+----------------------------
+$ cat locatepattern.sh 
+#!/bin/bash
+read -p "Enter pattern :"  pattern
+read -p "Enter filename:"  flname
+
+if [ -z "$pattern" -o -z "$flname" ]
+then
+  echo "Pattern/Filename not provided."
+  exit 4
+fi
+
+if grep "$pattern" $flname > /dev/null 2>> errorlog
+then
+  echo "$pattern string found in $flname file."
+else
+  echo "$pattern or $flname not present"
+fi
+$ ./locatepattern.sh 
+Enter pattern :sachin
+Enter filename:datafile
+sachin string found in datafile file.
+$ ./locatepattern.sh 
+Enter pattern :krishna
+Enter filename:datafile
+krishna or datafile not present
+$ ./locatepattern.sh 
+Enter pattern :sachin
+Enter filename:nofile
+sachin or nofile not present
+******************************************************************************
+# Handle bugs in backup script using command line arguments
+
+Bugs:
+-----
+-What if user does not provide any argument
+-What if user provides filename which is not present
+-What if user provides directory name as argument
+
+$ cat backup2.sh
+flname=$1
+DATEPART=`date '+%d_%b_%Y_%H_%M'`
+DIRNAME=BKP_$DATEPART
+mkdir ~/BACKUP/$DIRNAME
+echo "File copy in progress...."
+cp $flname ~/BACKUP/$DIRNAME/$flname.bkp
+echo "$flname file backup completed."
+****************************************************
+$ cat backup3.sh
+#!/bin/bash
+
+if [ $# -ne 1 ]
+then
+  echo "Invalid arguments. Usage:backup3.sh <filename>"
+  exit
+fi
+
+flname=$1
+
+if [ -e $flname -a -f $flname ]
+then
+   DATEPART=`date '+%d_%b_%Y_%H_%M'`
+   DIRNAME=BKP_$DATEPART
+   mkdir ~/BACKUP/$DIRNAME
+   echo "File copy in progress...."
+   cp $flname ~/BACKUP/$DIRNAME/$flname.bkp
+   echo "$flname file backup completed."
+else
+   echo "Not able to open $flname"
+fi
+$ ./backup3.sh
+Invalid arguments. Usage:backup3.sh <filename>
+$ ./backup3.sh nofile
+Not able to open nofile
+$ ./backup3.sh BACKUP
+Not able to open BACKUP
+$ ./backup3.sh datafile
+File copy in progress....
+datafile file backup completed.
+$ tree BACKUP
+BACKUP
+├── BKP_07_Dec_2017_15_19
+│   └── datafile.bkp
+├── BKP_07_Dec_2017_16_24
+│   └── file1.bkp
+└── BKP_08_Dec_2017_11_53
+    └── datafile.bkp
+
+3 directories, 3 files
+******************************************************************************
+case statement:
+---------------
+case <variable> in
+  option_1)  <statement_1>
+		...
+	     <statement_n> ;;
+  option_2)  <statement_1>
+		...
+	     <statement_n> ;;
+   .........................
+   .........................
+  option_n)  <statement_1>
+		...
+	     <statement_n> ;;
+esac
+
+Example:
+--------
+$ cat menuprg.sh 
+#!/bin/bash
+echo -e "\n\t\tMain Menu\n"
+echo "1. Display server's startup details"
+echo "2. My last login details"
+echo "3. Present month's calendar"
+echo "4. Quit"
+
+echo -n "Choose an option:"
+read option
+
+case $option in
+  1) echo "Server's startup details"
+     uptime ;;
+  2) echo "$USER last login details"
+     lastlog -u $USER ;;
+  3) echo "Present month's calendar"
+     cal ;;
+  4) exit ;;
+  *) echo "No such option" ;;
+esac
+$ ./menuprg.sh 
+
+		Main Menu
+
+1. Display server's startup details
+2. My last login details
+3. Present month's calendar
+4. Quit
+Choose an option:1
+Server's startup details
+ 12:17:03 up  3:50, 25 users,  load average: 0.00, 0.02, 0.00
+$ ./menuprg.sh 
+
+		Main Menu
+
+1. Display server's startup details
+2. My last login details
+3. Present month's calendar
+4. Quit
+Choose an option:3
+Present month's calendar
+    December 2017   
+Su Mo Tu We Th Fr Sa
+                1  2
+ 3  4  5  6  7  8  9
+10 11 12 13 14 15 16
+17 18 19 20 21 22 23
+24 25 26 27 28 29 30
+31
+*******************************************
+HERE document:
+--------------
+$ cat
+Welcome
+Welcome
+to
+to
+unix
+unix
+$ cat > message
+welcome
+to
+unix
+$ 
+$ cat <<EOT
+> welcome
+> to
+> unix
+> EOT
+welcome
+to
+unix
+---------------------------------------
+Menu program using HERE document:
+---------------------------------
+$ cat menuprg.sh 
+#!/bin/bash
+
+cat <<EOT
+          Main Menu
+
+1. Display server's startup details
+2. My last login details
+3. Present month's calendar
+4. Quit
+
+Choose an option:
+EOT
+read option
+
+case $option in
+  1) echo "Server's startup details"
+     uptime ;;
+  2) echo "$USER last login details"
+     lastlog -u $USER ;;
+  3) echo "Present month's calendar"
+     cal ;;
+  4) exit ;;
+  *) echo "No such option" ;;
+esac
+$ ./menuprg.sh 
+          Main Menu
+
+1. Display server's startup details
+2. My last login details
+3. Present month's calendar
+4. Quit
+
+Choose an option:
+2
+murthy last login details
+Username         Port     From             Latest
+murthy                                     **Never logged in**
+*****************************************************************
+while loop:
+-----------
+while <condition>
+do
+  <statements>
+done
+
+# Display numbers from 1 to 10 using while loop
+
+$ x=1
+$ while [ $x -le 10 ]
+> do
+>   echo "x=$x"
+>   x=$((x+1))
+> done
+x=1
+x=2
+x=3
+x=4
+x=5
+x=6
+x=7
+x=8
+x=9
+x=10
+***********************************************
+Repeating menu program using while loop:
+----------------------------------------
+$ cat repeatmenu.sh 
+#!/bin/bash
+
+choice=y
+
+while [ "$choice" = "y" ]
+do
+  ./menuprg.sh
+  read -p "Wish to continue[y/n]:" choice
+done
+$ 
+$ chmod u+x repeatmenu.sh 
+$ ./repeatmenu.sh 
+          Main Menu
+
+1. Display server's startup details
+2. My last login details
+3. Present month's calendar
+4. Quit
+
+Choose an option:
+1
+Server's startup details
+ 12:40:54 up  4:14, 28 users,  load average: 1.09, 0.87, 0.43
+Wish to continue[y/n]:y
+          Main Menu
+
+1. Display server's startup details
+2. My last login details
+3. Present month's calendar
+4. Quit
+
+Choose an option:
+3
+Present month's calendar
+    December 2017   
+Su Mo Tu We Th Fr Sa
+                1  2
+ 3  4  5  6  7  8  9
+10 11 12 13 14 15 16
+17 18 19 20 21 22 23
+24 25 26 27 28 29 30
+31
+Wish to continue[y/n]:n
+********************************************************************
+select loop:
+------------
+$ cat selectprg.sh 
+#!/bin/bash
+
+select option in "Last login" "Startup Details" Users Quit
+do
+  case $option in 
+        "Last login") echo "Last login details"
+                      lastlog -u $USER ;;
+   "Startup Details") echo "Server startup details"
+ 	     	      uptime ;;
+               Users) echo "List of users logged in"
+		      who ;;
+		Quit) exit ;;
+                   *) echo "No such option" ;;
+  esac
+done
+$ chmod u+x selectprg.sh 
+$ export PS3="Enter your option:"
+$ ./selectprg.sh 
+1) Last login
+2) Startup Details
+3) Users
+4) Quit
+Enter your option:2
+Server startup details
+ 12:50:01 up  4:23, 29 users,  load average: 1.06, 1.01, 0.69
+Enter your option:1
+Last login details
+Username         Port     From             Latest
+murthy                                     **Never logged in**
+Enter your option:5
+No such option
+Enter your option:4
+*******************************************************
+until loop:
+-----------
+until <condition>
+do
+   <statements>
+done
+
+# Using until loop display numbers from 10 to 1
+
+$ cat untilprg.sh 
+x=5
+until [ $x -lt 1 ]
+do
+  echo "x=$x"
+  x=$((x-1))
+done
+$ 
+$ chmod u+x untilprg.sh 
+$ ./untilprg.sh 
+x=5
+x=4
+x=3
+x=2
+x=1
+****************************************
+Functions:
+----------
+function <function_name> 
+{
+  <body>
+}
+
+<function_name>
+{
+   <body>
+}
+
+Example:
+--------
+$ function md
+> {
+>   if [ ! -e $1 ]
+>   then
+>      mkdir $1
+>      echo "Directory created."
+>   else
+>      echo "$1 object already existing"
+>   fi
+> }
+$ 
+$ md newdir
+Directory created.
+$ md newdir
+newdir object already existing
+***************************************************************************************
+Using functions in shell scripts:
+---------------------------------
+$ vi checkpassword.sh
+$ cat checkpassword.sh 
+#!/bin/bash
+
+function getpassword
+{
+  echo -n "Enter your password:"
+  read password
+}
+
+getpassword
+
+until [ "$password" = "unix" ]
+do
+   echo "Wrong password."
+   getpassword
+done
+echo "Login successful."
+$ chmod u+x checkpassword.sh 
+$ ./checkpassword.sh 
+Enter your password:linux
+Wrong password.
+Enter your password:welcome
+Wrong password.
+Enter your password:unix
+Login successful.
+************************************
+Debugging scripts:
+------------------
+$ cat checkpassword.sh 
+#!/bin/bash
+
+function getpassword
+{
+  echo -n "Enter your password:"
+  read password
+}
+
+set -x
+
+getpassword
+
+until [ "$password" = "unix" ]
+do
+   echo "Wrong password."
+   getpassword
+done
+echo "Login successful."
+
+set +x
+$ ./checkpassword.sh 
++ getpassword
++ echo -n 'Enter your password:'
+Enter your password:+ read password
+linux
++ '[' linux = unix ']'
++ echo 'Wrong password.'
+Wrong password.
++ getpassword
++ echo -n 'Enter your password:'
+Enter your password:+ read password
+unix
++ '[' unix = unix ']'
++ echo 'Login successful.'
+Login successful.
++ set +x
+------------------------------------------------
+Hiding text while providing input:
+----------------------------------
+$ cat checkpassword.sh 
+#!/bin/bash
+
+function getpassword
+{
+  echo -n "Enter your password:"
+  stty -echo
+  read password
+  stty echo
+}
+
+getpassword
+
+until [ "$password" = "unix" ]
+do
+   echo "Wrong password."
+   getpassword
+done
+echo "Login successful."
+
+$ ./checkpassword.sh 
+Enter your password:Wrong password.
+Enter your password:Login successful.
+------------------------------------------------------------------------------------
+# Limit prompting for password for 3 attempts
+
+$ cat checkpassword.sh 
+#!/bin/bash
+
+function getpassword
+{
+  echo -n "Enter your password:"
+  stty -echo
+  read password
+  stty echo
+}
+
+x=2
+
+getpassword
+
+until [ "$password" = "unix" ]
+do
+   if [ $x -eq 0 ]
+   then
+     echo -e "\nLogin failed."
+     exit
+   else
+     echo -e "\nWrong password. Last $x attempt(s) remaining"
+     getpassword
+   fi
+   x=$((x-1))
+done
+echo -e "\nLogin successful."
+******************************************************************************************
+Trapping signals:
+-----------------
+$ cat printfile.sh 
+#!/bin/bash
+
+if [ $# -ne 1 ]
+then
+  echo "Invalid arguments. Usage:printfile.sh <filename>"
+  exit
+fi
+
+TEMPFILE=/tmp/${USER}_$$
+
+function cleanup()
+{
+   rm -f $TEMPFILE
+   exit
+}
+
+filename=$1
+
+pr --length=40 --width=50 -h "Employees Annual Report" $filename > $TEMPFILE
+
+echo "Wish to print [y/n]:"
+read choice
+
+if [ "$choice" = "y" ]
+then
+  lpr $TEMPFILE
+fi
+
+cleanup
+---------------------------
+$ ./printfile.sh locatepattern.sh
+Wish to print [y/n]:
+n		--tempfile is removed (efficient way of writing scripts)
+$ ./printfile.sh locatepattern.sh
+Wish to print [y/n]:
+^C		--tempfile remains 
+----------------------------
+Trapping signal : trap
+----------------------
+$ cat printfile.sh 
+#!/bin/bash
+
+if [ $# -ne 1 ]
+then
+  echo "Invalid arguments. Usage:printfile.sh <filename>"
+  exit
+fi
+
+TEMPFILE=/tmp/${USER}_$$
+
+function cleanup()
+{
+   rm -f $TEMPFILE
+   exit
+}
+
+trap cleanup SIGINT	# for trapping interrupt signal
+
+filename=$1
+
+pr --length=40 --width=50 -h "Employees Annual Report" $filename > $TEMPFILE
+
+echo "Wish to print [y/n]:"
+read choice
+
+if [ "$choice" = "y" ]
+then
+  lpr $TEMPFILE
+fi
+
+cleanup
+---------------------------
+$ ./printfile.sh locatepattern.sh
+Wish to print [y/n]:
+n			--tempfile is cleaned up
+$ ./printfile.sh locatepattern.sh
+Wish to print [y/n]:
+^C$ 			--tempfile is cleaned up using trap
+***************************************************************************************
+Using options and arguments in shell script:
+--------------------------------------------
+$ cat getopts.sh 
+#!/bin/bash
+
+while getopts ":ab:c" opt
+do
+  case $opt in
+    a) echo "Code for option a" ;;
+    b) echo "Code for option b with argument $OPTARG";;
+    c) echo "Code for option c";;
+   \?) echo "No such option.Usage: getopts.sh -a -b <argument> -c"
+  esac
+done
+$ chmod u+x getopts.sh 
+$ ./getopts.sh -a -c
+Code for option a
+Code for option c
+$ ./getopts.sh -a -x
+Code for option a
+No such option.Usage: getopts.sh -a -b <argument> -c
+$ ./getopts.sh -c -b Unix
+Code for option c
+Code for option b with argument Unix
+$ ./getopts.sh -ca
+Code for option c
+Code for option a
+$ ./getopts.sh -caxy
+Code for option c
+Code for option a
+No such option.Usage: getopts.sh -a -b <argument> -c
+No such option.Usage: getopts.sh -a -b <argument> -c
+*********************************************************************************************
+shift statement:
+---------------
+$ vi shiftprg.sh
+$ cat shiftprg.sh 
+echo "Number of arguments:$#"
+echo "List of arguments:$*"
+shift
+echo "Number of arguments:$#"
+echo "List of arguments:$*"
+shift 2
+echo "Number of arguments:$#"
+echo "List of arguments:$*"
+$ 
+$ chmod u+x shiftprg.sh 
+$ 
+$ ./shiftprg.sh welcome to unix shell scripting
+Number of arguments:5
+List of arguments:welcome to unix shell scripting
+Number of arguments:4
+List of arguments:to unix shell scripting
+Number of arguments:2
+List of arguments:shell scripting
+********************************************************************
+Example using shift:
+--------------------
+$ cat copyfiles.sh 
+#!/bin/bash
+
+DIRNAME=$1
+shift
+mkdir $DIRNAME
+cp $* $DIRNAME
+ 
+$ chmod u+x copyfiles.sh 
+
+$ ./copyfiles.sh NEWDIR datafile file1 file2 message
+
+$ ls NEWDIR
+datafile  file1  file2  message
+**********************************************************************
+for loop:
+---------
+for <variable> in <value_1> <value_2> .... <value_n>
+do
+  <statements>
+done
+
+Example:
+--------
+$ for x in 2 9 4 12 5
+> do
+>   echo "x=$x"
+> done
+x=2
+x=9
+x=4
+x=12
+x=5
+---------------------------------------------------
+$ cat listfiles.sh 
+#!/bin/bash
+
+for flname in *
+do
+  if [ -d $flname ]
+  then
+    echo $flname
+  fi
+done
+ 
+$ chmod u+x listfiles.sh
+
+$ ./listfiles.sh
+BACKUP
+newdir
+NEWDIR
+ 
+# Write a script for removing all empty files. Before removing get user confirmation
+
+$ cat rememptyfiles.sh 
+#!/bin/bash
+
+for flname in *
+do
+  if [ ! -s $flname ]
+  then
+    rm -i $flname
+  fi
+done
+$ 
+$ chmod u+x rememptyfiles.sh 
+$ ./rememptyfiles.sh 
+rm: remove regular empty file `errorfile'? n
+rm: remove regular empty file `outfile'? n
+$ 
+$ find . -size 0 -exec rm -i {} \;
+rm: remove regular empty file `./outfile'? n
+rm: remove regular empty file `./errorfile'? n
+********************************************************************************
+# Write a script for finding total size occupied by all files and directories in current directory
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
