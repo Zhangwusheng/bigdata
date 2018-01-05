@@ -1,0 +1,4 @@
+
+# Hadoop command to delete all the files in Year 2007 and on the month of June
+
+./hadoop fs -rm -r `hadoop fs -ls / | grep '.*2017-06' | awk '{print $8}'`
