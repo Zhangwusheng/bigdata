@@ -1,0 +1,34 @@
+[1] What is a call-by-name and call-by-value reference ?
+
+[2] ________________ is the method used to cast the object to another object.
+[3] The return keyword is not mandatory in scala = (TRUE/FALSE)
+[4] Any class can be renamed at any place in the code throughout the project - (YES/NO)
+[5] Name the fast compiler command of scala
+[6] Which one of following is not a scala IDE - Eclipse, IntelliJ, Pycharm
+[7] Is override keyword mandatory in scala when overriding a method - (YES/NO)
+[8] What is the command to paste the raw code in the REPL
+[9] Can the match statement be made on various composite objects - (YES/NO)
+[10]How would you achieve static method in scala. Write the answer in one line.
+[11]___________________ is the name of the pattern called in scala for which the object and class name are same.
+[12]trait can have concrete implementation - (YES/NO)
+[13]Name the use of sealed class
+[14]___________________ is an example of sealed class in scala SDK
+[15]The lazy keyword is used for the __________________________________________________________.
+[16]Write the one line code for adding numbers from 1 to 100000
+[17]___________________ is the data structure used for fast random access.
+
+[18]___________________ is the package name for file operations for scala.
+[19]___________________ and _______________________ are the subclasses of Option class
+
+
+
+Assignment
+
+1. Write a Higher Order Function (HOF) for adding, subtracting and multiplication of numbers with the
+process() method as HoF and the algorithms as add, subtract and multiply.
+
+2. Write a currying function for reading a xml file first and then reading a csv file.
+Reading a xml file should return a PAF and that should again read a csv file and the output
+would be a concatenation of xml and csv file.
+
+3. What are inline functions ?
